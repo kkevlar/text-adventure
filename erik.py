@@ -16,7 +16,6 @@ class Room:
 
 with open("story.e") as f:
 	for line in f:
-		print(line)
 		line = line.replace('\n','')
 		if line.startswith("#"):
 			if currRoom is not False:
@@ -28,7 +27,6 @@ with open("story.e") as f:
 			line = line[1:]
 			line = line[:-1]
 			spl = line.split("->")
-			print(spl)
 			currRoom.propset.update({spl[0]:spl[1]})
 		elif '=' in line and '->' in line:
 			currRoom.conditional = True

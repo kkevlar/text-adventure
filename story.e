@@ -53,26 +53,52 @@ else->right-1-notorch
 #right-1-notorch
 As you travel you feel something bump your foot.  You reach down and feel the slimy object on your hand.  "Grab" it or "drop" it and keep moving.  You can also choose to head "back".
 !grab->right-1-grab
-!drop->right-1-drop
+!drop->right-2
 !back->deeper
 
 #right-1-torch
-The friendly orange glow of torchlight continues to dance on the icy cave walls. You "back" forward through the cave passage.
+The friendly orange glow of torchlight continues to dance on the icy cave walls. You "continue" or head "back"?
 !back->deeper
+!continue->right-2
 
 #right-1-grab
 You shake the wetness off the object and realize it is cloth wrapped around wood.  You believe it is a torch.  Try "strike"ing it against the wall of the cave or "drop" the object?
 !strike->right-1-strike
-!drop->right-1-drop
+!drop->right-1
 
 #right-1-strike
-Miraculously, the torch lights!  The friendly orange glow or torchlight dances on the icy cave walls. You "back" forward through the cave passage.
+Miraculously, the torch lights!  The friendly orange glow or torchlight dances on the icy cave walls. You "continue" or head "back"?
 <torch->true>
 !back->deeper
-
-#right-1-drop
-You choose to drop the object.  You hear the light thud of it hitting the icy floor.  You "continue" forward through the cave passage.
 !continue->right-2
 
+#right-2
+You continue down the passageway. Towards the end you can barely make out a glowing golden egg on a pedestal.  The air around here feels much warmer.  You continue to "inspect" the area.
+!inspect->right-2-2
+
+#right-2-2
+fire=true->right-2-burn
+torch=true->right-2-torch
+else->right-2-notorch
+
+#right-2-torch
+In searching the room you see a lot of cobwebs on the walls.  "Burn" the cobwebs to inspect the walls?
+!burn->right-2-burn
+
+#right-2-burn
+In burning off the cobwebs, you accidentally light a fire in the room. You need to get "out" now!
+<fire->true>
+!out->deeper
+
+#right-2-notorch
+Your eyes move to the golden egg. How beautiful!
+!look->right-love-egg
+!admire->right-love-egg
+!enjoy->right-love-egg
+!inspect->right-love-egg
+
+#right-love-egg
+What a beautiful golden egg!
+!look,admire,enjoy,inspect->right-2-2
 
 
