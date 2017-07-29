@@ -28,11 +28,15 @@ You travel deeper into the cave and hit a T-junction.  You can either go "left" 
 !right->right-1
 
 #left-1
-<torch=true>
+torch=true->left-torch
+else->left-notorch
+
+#left-torch
 You travel into a narrow passageway.  Something makes you think that seeing down here would be very difficult without a torch lighting the way.  "Continue" or head "back"?
 !continue->left-2
 !back->deeper
-<else>
+
+#left-notorch
 As you travel, the darkness gets absolute. You could try "feel"ing your way around, or you could head "back".
 !feel->feel-1
 !back->deeper
@@ -43,9 +47,17 @@ The walls are icy cold and the darkness is not comforting.  You wonder if you ar
 !back->left-1
 
 #right-1
+torch=true->right-1-torch
+else->right-1-notorch
+
+#right-1-notorch
 As you travel you feel something bump your foot.  You reach down and feel the slimy object on your hand.  "Grab" it or "drop" it and keep moving.  You can also choose to head "back".
 !grab->right-1-grab
 !drop->right-1-drop
+!back->deeper
+
+#right-1-torch
+The friendly orange glow of torchlight continues to dance on the icy cave walls. You "back" forward through the cave passage.
 !back->deeper
 
 #right-1-grab
@@ -54,9 +66,9 @@ You shake the wetness off the object and realize it is cloth wrapped around wood
 !drop->right-1-drop
 
 #right-1-strike
-Miraculously, the torch lights!  The friendly orange glow or torchlight dances on the icy cave walls. You "continue" forward through the cave passage.
+Miraculously, the torch lights!  The friendly orange glow or torchlight dances on the icy cave walls. You "back" forward through the cave passage.
 <torch->true>
-!continue->right-2
+!back->deeper
 
 #right-1-drop
 You choose to drop the object.  You hear the light thud of it hitting the icy floor.  You "continue" forward through the cave passage.
