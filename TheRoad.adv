@@ -47,12 +47,28 @@ Oakland it coming up on the side of the highway.  Harold must have went this way
 !enter,enter town,town,go to town,stop->beg-12
 
 #beg-12
-The thing is, he didn't ever seem to exist. You spent your entire childhood with him. He lived just acrossed the street. He had some friends in Oakland.  I wonder if they still live here.
+The thing is, he didn't ever seem to exist. You spent your entire childhood with him. He lived just acrossed the street. He had some friends in Oakland.  I wonder if they still live here.  Harold's parents got divorced when he was 17. Him and his dad moved to Oakland.  Does anyone here remember Harold?  The "police" might be a good place to start, but you could also just go "door" to door.
+!police->oakland-police
 
-#beg-13 
-Harold's parents got divorced when he was 17. They only had one more year to go so, things must of really gone to shit then. His dad moved to oakland so, he spent some time here. You hope some people remember him, no one does in our home town
+#oakland-police
+You head north to the police station.  It is a dated building with a dirty exterior.  It hard to believe anyone could be here.  Much less anyone who could remember Harold.
+!enter,go in,go,open door,door,open,continue->oakland-p2
 
-#beg-14
+#oakland-p2
+The lobby has a single officer.
+
+"You don't look like you are from here.  Anything I can help you with?"
+
+(ask about "harold")
+!harold->oakland-p3
+
+#oakland-p3
+The officer suddenly tenses up.  
+
+"I've never heard of a Harold Brown around here.  You seem a bit lost.  Need directions for getting out of town to wherever you are going?"
+!no,yes,leave->oakland-p4
+
+
 You have talked with the police of course but, that brought you the most frighten news. Harold Brown, your good childhood friend never existed. You mean, he must of existed right? How would the memories of the hours playing with him get in your head without it being real. Harold legally didn't exist anymore, no driver linsince or any other identifaction. The police half forced you out of the station when you kept on asking to try again. Legally, Harold Brown never has existed.
 
 #beg-15
