@@ -1,10 +1,26 @@
 #0
 You wake up in a frozen cave.  You don't remember very much.  Either "leave" the cave or go "deeper" into it. 
+<blankets->false>
 !leave->tundra
 !deeper->deeper
 
 #tundra
-You left the cave and find a frozen tundra.  A blizzard rages and you cannot see beyond your nose. You can choose to "wander" aimlessly in the tundra or "return" to the cave.
+blankets=true->tundra-warmed
+else->tundra-freezing
+
+#tundra-warmed
+You leave the cave for the cold tundra.  If you weren't wearing the blankets you found eariler, you would be a popscile by now.  "Wander" around for awhile or head "back"?
+!wander->a-strange-find
+!return->back-cave
+
+#a-strange-find
+After wandering in the tundra for a few hours, you find a plaque with the numbers 37-11-44 engraved on it.  I wonder what that could mean?  Maybe you should head "back" now, you are getting a bit cold.  But i guess you could still "wander".
+<code->true>
+!wander->frostbite
+!return,back->back-cave
+
+#tundra-freezing
+You left the cave and find a frozen tundra. It is SO cold. A blizzard rages and you cannot see beyond your nose. You can choose to "wander" aimlessly in the tundra or "return" to the cave.
 !wander->frostbite
 !return->back-cave
 
@@ -23,9 +39,10 @@ Eventually you die of starvation sitting and doing nothing.  Your corpse will ma
 !yes,respawn->0
 
 #deeper
-You travel deeper into the cave and hit a T-junction.  You can either go "left" or "right".
+You travel deeper into the cave and hit a T-junction.  You can either go "left" or "right".  You could also head back up towards the "surface".
 !left->left-1
 !right->right-1
+!back,surface->back-cave
 
 #left-1
 torch=true->left-torch
@@ -90,6 +107,13 @@ In burning off the cobwebs, you accidentally light a fire in the room. You need 
 <fire->true>
 !out->deeper
 
+#right-love-egg
+What a beautiful golden egg!
+!look->right-2-notorch
+!admire->right-2-notorch
+!enjoy->right-2-notorch
+!inspect->right-2-notorch
+
 #right-2-notorch
 Your eyes move to the golden egg. How beautiful!
 !look->right-love-egg
@@ -97,8 +121,82 @@ Your eyes move to the golden egg. How beautiful!
 !enjoy->right-love-egg
 !inspect->right-love-egg
 
-#right-love-egg
-What a beautiful golden egg!
-!look,admire,enjoy,inspect->right-2-2
+#left-2
+The passageway narrows as you "continue" down its depths.
+!continue->left-3
+
+#left-3
+Its not too late to turn "back" now.  "Continue" down the narrowing passageway?
+!back->left-1
+!continue->left-4
+
+#left-4
+Where am I?
+!continue->left-5
+
+#left-5
+I seem to have lost my way.  There are four ways to go from here.  I know I came from the "west", but the tunnel continues "north", "east" and "west".
+!back,west->left-3
+!north->l-north
+!south->l-south
+!east->l-east
+
+#l-north
+The cave is still pretty dark. Continue "north" or head "back"?
+!north->ln2
+!back->left-5
+
+#ln2
+The cave is still pretty dark. Continue "north" or head "back"?
+!north->ln3
+!back->left-5
+
+#ln3
+The cave has gotten darker. Maybe it is best to head "back"?
+!back->left-5
+
+#l-south
+code=true->yes-code
+else->no-code
+
+#yes-code
+After a good half hour of walking down this tunnel, you come up to a small safe with a padlock on it.  I wonder what the combination is. You can continue to "look" around here or head "back".
+!back->left-5
+!look->ls2-yes
+
+#ls2-yes
+You inspect the safe and try the code you saw earlier.
+!37-11-44->unlock
+
+#unlock
+You unlock the safe.  I is filled with uncanny drawings about eggs with the word "BeaUTy" written all over it.  I wonder if that will be helpful in your future.  THIS IS THE END FOR NOW.........
 
 
+#no-code
+After a good half hour of walking down this tunnel, you come up to a small safe with a padlock on it.  I wonder what the combination is. You can continue to "look" around here or head "back".
+!back->left-5
+!look->ls2
+
+#ls2
+Well there isnt much else to do here. You really do need a combination.  You can continue to "look" around here or head "back".
+!look->ls2
+!back->left-5
+
+#l-east
+blankets=true->leppp
+else->leb
+
+#leppp
+After walking a few feet down the eastward tunnel, it seems apparent that someone had been living here.  And recently.  There is some empty ration cans and a couple blankets. "Take" the blankets or "leave"?
+!take->blankettake
+!leave->left-5
+
+#blankettake
+You took the blankets.
+<blankets->true>
+!leave->left-5
+
+#leb
+After walking a few feet down the eastward tunnel, it seems apparent that someone had been living here.  And recently.  There is some empty ration cans.
+!leave->left-5
+!bugfix->blankettake

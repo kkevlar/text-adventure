@@ -14,13 +14,13 @@ class Room:
 	def exe(self):
 		globalProps.update(self.propset)
 
-with open("story.e") as f:
+with open("TheRoad.adv") as f:
 	for line in f:
 		line = line.replace('\n','')
 		if line.startswith("#"):
 			if currRoom is not False:
 				rooms.append(currRoom)
-			currRoom = Room(line[1:])
+			currRoom = Room(line[1:].strip())
 		elif line.isspace():
 			continue
 		elif '=' not in line and '!' not in line and '->' in line and line.startswith("<") and line.endswith(">"):
@@ -49,6 +49,9 @@ with open("story.e") as f:
 				currRoom.choices.update({choice : sp[1]})
 		else:
 			currRoom.paragraph = currRoom.paragraph + line
+
+
+rooms.append(currRoom)
 '''
 rm = Room()
 rm.label = '0'
@@ -80,29 +83,38 @@ for rm in rooms:
 	print(rm.paragraph)
 '''
 
+
 currRoom = rooms[0]
 glbCont = False
+
+def findRoom(rmId):
+	global rooms
+	global currRoom
+	global glbCont
+	did = False
+	for rmm in rooms:
+		#print ("?%s=%s"%(rmm.label.lower().strip(), rmId.lower().strip()))
+		if rmm.label.lower().strip() == rmId.lower().strip():
+			currRoom = rmm
+			glbCont = True
+			did = True
+	if did is False:
+		print("FAILED TO FIND ROOM %s" % rmId)
 
 while True:
 	if currRoom.conditional is True:
 		for gk in globalProps:
 			for ck in currRoom.propset:
-				for ckk in currRoom.propset[ck]:
-					if gk.lower() == ck.lower():
-						if globalProps[gk].lower() == ckk.lower():
-							rmId = (currRoom.propset[ck])
-							rmId = rmId[ckk]
-							for rmm in rooms:
-								if rmm.label.lower() == rmId.lower():
-									currRoom = rmm
-									glbCont = True
+				if ck in currRoom.propset:
+					for ckk in currRoom.propset[ck]:
+						if gk.lower() == ck.lower():
+							if globalProps[gk].lower() == ckk.lower():
+								rmId = (currRoom.propset[ck])
+								rmId = rmId[ckk]
+								findRoom(rmId)						
 		if(glbCont is False and currRoom.contElse is not False):
 			rmId = currRoom.contElse
-			for rmm in rooms:
-				if rmm.label.lower() == rmId.lower():
-					currRoom = rmm
-					glbCont = True
-					print("yay")
+			findRoom(rmId)
 	if glbCont is True:
 		glbCont = False
 		continue
@@ -116,6 +128,4 @@ while True:
 		print("\n")
 		continue;
 	rmId = currRoom.choices[choice]
-	for rmm in rooms:
-		if rmm.label.lower() == rmId.lower():
-			currRoom = rmm
+	findRoom(rmId)

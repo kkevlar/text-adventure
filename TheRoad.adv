@@ -1,0 +1,61 @@
+#0  
+The road stretches on forever. Miles and miles of endless monotony. Makes your feel like your aren't going anywhere at all but, you know you are. 
+!continue->beg1
+
+#beg1
+That is the point of road of course, to get somewhere. You aren't going to a destination though.
+!continue->beg2
+
+#beg2
+It has been five years since Harold disappeared. Harold Brown disappeared on his trip across the US. It is unknown why he disappeared, which, seems pretty normal to you. 
+!continue->beg3
+
+#beg3
+The open road is an easy place to disappear. You don't believe Harold just took the next exit to the motel six. Maybe he did, to shoot himself. 
+!harold->beg-4
+
+#beg-4
+Your exit is coming up.  Take the next exit to motel six.
+!exit->beg-5
+
+#beg-5
+You park your car in the trashy motel parking lot. You hand over your Visa and stay you will be only staying one night.  "Welcome, Harold Brown" says the the front desk.  Head up to your room.
+!room->beg-6
+
+#beg-6
+You decide to get in the shower.
+!shower->beg-7
+
+#beg-7
+And take your gun.
+!take,gun->beg-8
+
+#beg-8
+And turn on the shower.
+!turn on,shower,on->beg-9
+
+#beg-9
+The cold water begins to fill the tub.  Shoot yourself.
+!shoot,shoot myself->beg-10
+
+#beg-10
+No, you would of heard that, his body found with the top half of his head blown off.  The maid screaming when she comes in just minutes minute after the bang. Keep driving.
+!continue,keep driving,drive,driving->beg-11
+
+#beg-11
+Oakland it coming up on the side of the highway.  Harold must have went this way.  He must have.
+!enter,enter town,town,go to town,stop->beg-12
+
+#beg-12
+The thing is, he didn't ever seem to exist. You spent your entire childhood with him. He lived just acrossed the street. He had some friends in Oakland.  I wonder if they still live here.
+
+#beg-13 
+Harold's parents got divorced when he was 17. They only had one more year to go so, things must of really gone to shit then. His dad moved to oakland so, he spent some time here. You hope some people remember him, no one does in our home town
+
+#beg-14
+You have talked with the police of course but, that brought you the most frighten news. Harold Brown, your good childhood friend never existed. You mean, he must of existed right? How would the memories of the hours playing with him get in your head without it being real. Harold legally didn't exist anymore, no driver linsince or any other identifaction. The police half forced you out of the station when you kept on asking to try again. Legally, Harold Brown never has existed.
+
+#beg-15
+You park at the subway. It was dirty and empty, there wasn't even someone behind the counter. It is your first time to Oakland so, your have no idea where to start, who to ask. It might be good to check the police, just incase they still have him in their records. You could also go into the subway. Then, there is always going door to door knocking but, that may make you looked like a nut. 
+
+
