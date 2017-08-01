@@ -19,24 +19,86 @@ Your exit is coming up.  Take the next exit to motel six.
 !exit->beg-5
 
 #beg-5
-You park your car in the trashy motel parking lot. You hand over your Visa and stay you will be only staying one night.  "Welcome, Harold Brown" says the the front desk.  Head up to your room.
-!room->beg-6
+You park your car in the trashy motel parking lot. You hand over your Visa and tell the front desk that you will be only staying one night.  "Welcome, Harold Brown" says the the front desk.  Head up to your room.
+!room->beg-harold-room
 
-#beg-6
+#beg-harold-room
+Well, you are in your room.  There isn't too much to do here.  Looks like your only options are to "leave", "unpack", get in the "shower", or check the "drawers".
+!leave,back->harold-room-l
+!unpack->harold-room-u
+!shower,get in,get in the shower,take shower->harold-room-s
+!drawers,check->harold-room-b
+
+#harold-room-l
+haroldbible=true->harold-room-ld
+else->harold-room-lf
+
+#harold-room-lf
+You are forgetting something.  You can't leave yet.
+!ok,back,room,don't->beg-harold-room
+
+#harold-room-lf
+You can't leave yet.  There's an importatnt decision to be made.
+!ok,back,room,don't->beg-harold-room
+
+#harold-room-u
+haroldgun=true->harold-room-ua
+else->harold-room-up
+
+#harold-room-up
+You set down your bags and unpack.  You take out your gun and set it on the nightstand.
+<haroldgun->true>
+!gun,take,set,nightstand,ok,continue->beg-harold-room
+
+#harold-room-ua
+It looks like you already unpacked by the presence of your gun on the nightstand.
+!ok,continue,gun,set->beg-harold-room
+
+#harold-room-b
+haroldbible=true->harold-room-b2
+else->harold-room-b1
+
+#harold-room-b1
+<haroldbible->true>
+You just randomly open and close the drawers in the room.  In the nightstand drawer, you see a bible.  Nothing else to see here.
+!ok,back,continue->beg-harold-room
+
+#harold-room-b2
+haroldgun=true->harold-room-by
+else->harold-room-bn
+
+#harold-room-by
+You open the bible drawer again.  Looking at the bible with the gun on the nightstand above it reminds you that you have an important decision to make.
+<harolddec->true>
+!ok,continue,back->beg-harold-room
+
+#harold-room-bn
+You open the bible drawer again.  Still looks like there isn't much else to do here.
+!ok,continue,back->beg-harold-room
+
+#harold-room-s
+harolddec=true->harold-room-sd
+else->harold-room-sn
+
+#harold-room-sn
+You aren't quite ready to take a shower yet. You're forgetting something.
+!ok,continue,back->beg-harold-room
+
+#harold-room-sd
 You decide to get in the shower.
-!shower->beg-7
+!shower,ok,continue,go,get in->beg-7
 
 #beg-7
 And take your gun.
 !take,gun->beg-8
 
 #beg-8
-And turn on the shower.
+And you turn on the shower.
 !turn on,shower,on->beg-9
 
 #beg-9
-The cold water begins to fill the tub.  Shoot yourself.
-!shoot,shoot myself->beg-10
+The cold water begins to fill the tub.  You lift the gun to your head.
+!lift,gun,head,ok,continue->beg-10
 
 #beg-10
 No, you would of heard that, his body found with the top half of his head blown off.  The maid screaming when she comes in just minutes minute after the bang. Keep driving.
@@ -47,8 +109,12 @@ Oakland it coming up on the side of the highway.  Harold must have went this way
 !enter,enter town,town,go to town,stop->beg-12
 
 #beg-12
-The thing is, he didn't ever seem to exist. You spent your entire childhood with him. He lived just acrossed the street. He had some friends in Oakland.  I wonder if they still live here.  Harold's parents got divorced when he was 17. Him and his dad moved to Oakland.  Does anyone here remember Harold?  The "police" might be a good place to start, but you could also just go "door" to door.
+The thing is, he didn't ever seem to exist. You spent your entire childhood with him. He lived just acrossed the street. He had some friends in Oakland.  I wonder if they still live here.  Harold's parents got divorced when he was 17. Him and his dad moved to Oakland.  Does anyone here remember Harold?  
+
+You park at a sketchy sub shop. It looks pretty dirty and empty.  It is your first time to Oakland so your have no idea where to start. It might be good to check with the "police", they might have records of Harold. You could also go into the abandoned "shop".  You could also go door to "door" knocking but that may seem a bit conspcuous. 
 !police->oakland-police
+!door,knocking,door to door->oakland-d1
+!shop,subway,store,enter->oakland-s1
 
 #oakland-police
 You head north to the police station.  It is a dated building with a dirty exterior.  It hard to believe anyone could be here.  Much less anyone who could remember Harold.
@@ -68,10 +134,23 @@ The officer suddenly tenses up.
 "I've never heard of a Harold Brown around here.  You seem a bit lost.  Need directions for getting out of town to wherever you are going?"
 !no,yes,leave->oakland-p4
 
-
+#ERIK-NOTE
 You have talked with the police of course but, that brought you the most frighten news. Harold Brown, your good childhood friend never existed. You mean, he must of existed right? How would the memories of the hours playing with him get in your head without it being real. Harold legally didn't exist anymore, no driver linsince or any other identifaction. The police half forced you out of the station when you kept on asking to try again. Legally, Harold Brown never has existed.
 
-#beg-15
-You park at the subway. It was dirty and empty, there wasn't even someone behind the counter. It is your first time to Oakland so, your have no idea where to start, who to ask. It might be good to check the police, just incase they still have him in their records. You could also go into the subway. Then, there is always going door to door knocking but, that may make you looked like a nut. 
+#oakland-p4
+If the police aren't going to help you, you still have other options to investigate.  But maybe if the police don't want you here it is best to skip town.  Either way, you go back and park in front of the sketchy sandwich shop to decide. You could also go into the abandoned "shop".  You could also go door to "door" knocking but that may seem a bit conspcuous. 
+<police->true>
+!door,knocking,door to door->oakland-d1
+!shop,subway,store,enter->oakland-s1
+!leave,skip,exit,get on road,road->oakland-l1
 
+#oakland-d1
+Door to door
+
+
+#oakland-s1
+subway
+
+#oakland-l1
+leaving town
 

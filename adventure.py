@@ -1,3 +1,5 @@
+from time import sleep
+
 
 globalProps = dict()
 rooms = []
@@ -16,6 +18,7 @@ class Room:
 
 with open("TheRoad.adv") as f:
 	for line in f:
+		print(line)
 		line = line.replace('\n','')
 		if line.startswith("#"):
 			if currRoom is not False:
@@ -119,7 +122,16 @@ while True:
 		glbCont = False
 		continue
 	currRoom.exe();
-	print(currRoom.paragraph)
+	for i in range(0,len(currRoom.paragraph)):
+		slptime=0.04
+		char=currRoom.paragraph[i]
+		if char is '.':
+			slptime=slptime*10
+		if i is len(currRoom.paragraph) -1:
+			slptime=slptime*0
+		print(currRoom.paragraph[i],end="",flush=True)
+		sleep(slptime)
+	print("")
 	choice = input("	>").replace('\n','')
 	if not choice in currRoom.choices:
 		print("Not an option. Choices are: ",end="",flush=True)
