@@ -1,16 +1,13 @@
-#0  
+#s  
 The road stretches on forever. Miles and miles of endless monotony. Makes your feel like your aren't going anywhere at all but, you know you are. 
-!continue->beg1
 
-#beg1
+#s
 That is the point of road of course, to get somewhere. You aren't going to a destination though.
-!continue->beg2
 
-#beg2
+#s
 It has been five years since Harold's disappearance. Harold Brown disappeared on his trip across the US. 
-!continue->beg3
 
-#beg3
+#beg-harold
 The open road is an easy place to disappear if you think about it. With the constant movement it is hard to keep track of everyone. You don't believe Harold just took the next exit to the motel six. Maybe he did, to shoot himself. 
 !harold->beg-4
 
@@ -35,11 +32,7 @@ else->harold-room-lf
 
 #harold-room-lf
 You are forgetting something.  You can't leave yet.
-!ok,back,room,don't->beg-harold-room
-
-#harold-room-lf
-You can't leave yet.  There's an importatnt decision to be made.
-!ok,back,room,don't->beg-harold-room
+->harold-room-l
 
 #harold-room-u
 haroldgun=true->harold-room-ua
@@ -47,7 +40,7 @@ else->harold-room-up
 
 #harold-room-up
 You set down your bags to unpack.  You take your gun out of your suitcase and set it on the nightstand.
-<haroldgun->true>
+haroldgun=true
 !gun,take,set,nightstand,ok,continue->beg-harold-room
 
 #harold-room-ua
@@ -59,7 +52,7 @@ haroldbible=true->harold-room-b2
 else->harold-room-b1
 
 #harold-room-b1
-<haroldbible->true>
+haroldbible=true
 You randomly open and close the drawers in the room.  In the nightstand drawer, there is a bible.  The rest of them are empty
 
 #harold-room-b2
@@ -68,7 +61,7 @@ else->harold-room-bn
 
 #harold-room-by
 You open the nightstand drawer again,  looking at the bible with the gun on the nightstand above it reminds you that you have an important decision to make.
-<harolddec->true>
+harolddec=true
 !ok,continue,back->beg-harold-room
 
 #harold-room-bn
@@ -138,7 +131,7 @@ You have talked with the police of course but, that brought you the most frighte
 
 #oakland-p4
 If the police aren't going to help you, you still have other options to investigate.  But maybe if the police don't want you here it is best to skip town.  Either way, you go back and park in front of the sketchy sandwich shop to decide. You could also go into the abandoned "shop".  You could also go door to "door" knocking but that may seem a bit conspcuous. 
-<police->true>
+police->true
 !door,knocking,door to door->oakland-d1
 !shop,subway,store,enter->oakland-s1
 !leave,skip,exit,get on road,road->oakland-l1

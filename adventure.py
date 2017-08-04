@@ -4,34 +4,62 @@ from time import sleep
 globalProps = dict()
 rooms = []
 currRoom = False
+parent = False
+roomsInitCount = 0;
 
 class Room:
 	def __init__(self,lbl='default_label'):
 		self.label = lbl
 		self.paragraph = ''
 		self.choices = dict()
-		self.propset = dict()
+		self.propset = []
 		self.conditional = False
 		self.contElse = False
+		self.isStory = False
+		self.isCoords = False
+		self.isQInfo = False
 	def exe(self):
 		globalProps.update(self.propset)
 
+#PARSING
+
 with open("TheRoad.adv") as f:
 	for line in f:
-		print(line)
-		line = line.replace('\n','')
-		if line.startswith("#"):
+		line = line.replace('\n','').trim()
+		#ROOM HEADER
+		if line.startswith("#"): 
 			if currRoom is not False:
 				rooms.append(currRoom)
-			currRoom = Room(line[1:].strip())
+				roomsInitCount += 1
+			story = False
+			line = line[1:]
+			if line[0] is 's' or line[0] is 'S':
+				if len(line) is 1 or line[1] is ' ' or line[1] is '\n':
+					story = True
+					line = line[1:]
+			rmName = line.strip();
+			if rmName.isspace or len(rmName) == 0:
+				if story is True:
+					rmName = "StoryRoom%d"%roomsInitCount
+			currRoom = Room(rmName)
+			if story is True:
+				currRoom.isStory = True
+		#EMPTY SPACE
 		elif line.isspace():
 			continue
-		elif '=' not in line and '!' not in line and '->' in line and line.startswith("<") and line.endswith(">"):
-			line = line[1:]
-			line = line[:-1]
-			spl = line.split("->")
-			currRoom.propset.update({spl[0]:spl[1]})
-		elif '=' in line and '->' in line:
+		elif line.startswith("->")
+			line = line[2:]
+			currRoom.isQInfo = line.trim()
+		#PROPERTY MUTATION
+		elif line.startswith('^'):
+			currRoom.propset.append(line[1:].trim())
+		#PROPERTY TEST
+		elif line.startswith('?'):
+			line = line[1:].trim()
+			if line.startswith("<"):
+				line = line[1:].trim()
+				intLimit = int(line)
+				if ##TODO PROPER PROP TESTS
 			currRoom.conditional = True
 			cont = line.split("=")
 			reslt = cont[1].split("->")
@@ -40,51 +68,29 @@ with open("TheRoad.adv") as f:
 				reslt[0] : reslt[1]
 				}
 				})
+		#PROPERTY ELSE TEST
 		elif '->' in line and currRoom.conditional is True:
 			spl = line.split("->")
 			if spl[0].lower() == "else".lower():
 				currRoom.contElse = spl[1]
-
+		#USER RESPONSE DEFINITION
 		elif line.startswith("!"):
 			sp = line[1:].split("->")
 			choiceWords = sp[0].split(",")
 			for choice in choiceWords:
 				currRoom.choices.update({choice : sp[1]})
+		#PARAGRAPH TEXT
 		else:
-			currRoom.paragraph = currRoom.paragraph + line
+			currRoom.paragraph = currRoom.paragraph + line + '\n'
 
 
 rooms.append(currRoom)
-'''
-rm = Room()
-rm.label = '0'
-rm.paragraph = 'The first room.'
-rm.choices.update({
-	'die':'die',
-	'next':'next-rm'
-	})
-rooms.append(rm)
 
-exit()
-
-rm = Room()
-rm.label = 'die'
-rm.paragraph = 'YOU DIED'
-rooms.append(rm)
-
-rm = Room()
-rm.label = 'next-rm'
-rm.paragraph = 'UR in the next rm'
-rooms.append(rm)
-
-currRoom = rooms[0]
+for room in rooms:
+	print("no:%d lbl:%s"%(rooms.index(room),room.label))
 
 
-print(len(rooms))
-for rm in rooms:
-	print(rm.label)
-	print(rm.paragraph)
-'''
+#PLAYING
 
 
 currRoom = rooms[0]
@@ -94,14 +100,13 @@ def findRoom(rmId):
 	global rooms
 	global currRoom
 	global glbCont
-	did = False
+	roomFound = False
 	for rmm in rooms:
-		#print ("?%s=%s"%(rmm.label.lower().strip(), rmId.lower().strip()))
 		if rmm.label.lower().strip() == rmId.lower().strip():
 			currRoom = rmm
 			glbCont = True
-			did = True
-	if did is False:
+			roomFound = True
+	if roomFound is False:
 		print("FAILED TO FIND ROOM %s" % rmId)
 
 while True:
@@ -123,16 +128,28 @@ while True:
 		continue
 	currRoom.exe();
 	for i in range(0,len(currRoom.paragraph)):
-		slptime=0.04
+		slptime=0.004 #0.04
 		char=currRoom.paragraph[i]
 		if char is '.':
 			slptime=slptime*10
+		if char is '\n':
+			slptime=slptime*2
 		if i is len(currRoom.paragraph) -1:
 			slptime=slptime*0
 		print(currRoom.paragraph[i],end="",flush=True)
 		sleep(slptime)
-	print("")
-	choice = input("	>").replace('\n','')
+	#print("")
+	if room.isQInfo is not False:
+		rmId = room.isQInfo
+		findRoom(rmId)
+		continue;
+	choice = input("  >").replace('\n','')
+	if currRoom.isStory is True:
+		nIndex = rooms.index(currRoom);
+		if(nIndex < 0):
+			print("STORY ROOMS NOT LINKED PROPERLY")
+		currRoom = rooms[nIndex+1]
+		continue;
 	if not choice in currRoom.choices:
 		print("Not an option. Choices are: ",end="",flush=True)
 		for chx in currRoom.choices:

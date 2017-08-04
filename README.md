@@ -8,3 +8,7 @@ Todo list:
 - [ ] Create a room flowchart 
 - [ ] Change the "conditional rooms" syntax
 - [ ] Document the markup syntax in the readme file
+- [ ] Allow for story-only rooms that allow the user to advance by typing literally anything (#S)
+- [ ] Allow for coordinate-rooms (#C) that allow for easier writing
+- [ ] Allow for some sort of saving mechanism
+- [ ] Add a visit count
