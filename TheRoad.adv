@@ -7,23 +7,23 @@ That is the point of road of course, to get somewhere. You aren't going to a des
 !continue->beg2
 
 #beg2
-It has been five years since Harold disappeared. Harold Brown disappeared on his trip across the US. It is unknown why he disappeared, which, seems pretty normal to you. 
+It has been five years since Harold's disappearance. Harold Brown disappeared on his trip across the US. 
 !continue->beg3
 
 #beg3
-The open road is an easy place to disappear. You don't believe Harold just took the next exit to the motel six. Maybe he did, to shoot himself. 
+The open road is an easy place to disappear if you think about it. With the constant movement it is hard to keep track of everyone. You don't believe Harold just took the next exit to the motel six. Maybe he did, to shoot himself. 
 !harold->beg-4
 
 #beg-4
-Your exit is coming up.  Take the next exit to motel six.
+Your exit is coming up, the exit to the motel 6. The exit to what is beyond
 !exit->beg-5
 
 #beg-5
-You park your car in the trashy motel parking lot. You hand over your Visa and tell the front desk that you will be only staying one night.  "Welcome, Harold Brown" says the the front desk.  Head up to your room.
+You park your car in the motel parking lot. You hand over your Visa and book a room for one night. You head up to your room. The door is scratched and peeling. You open the door into your room, the carpet is puke green and there is an ugly painting of a pear behind the bed. The place smells of disinfectant.
 !room->beg-harold-room
 
 #beg-harold-room
-Well, you are in your room.  There isn't too much to do here.  Looks like your only options are to "leave", "unpack", get in the "shower", or check the "drawers".
+There isn't too much to do in your room.  You could "leave", "unpack", get in the "shower", or check the "drawers".
 !leave,back->harold-room-l
 !unpack->harold-room-u
 !shower,get in,get in the shower,take shower->harold-room-s
@@ -46,12 +46,12 @@ haroldgun=true->harold-room-ua
 else->harold-room-up
 
 #harold-room-up
-You set down your bags and unpack.  You take out your gun and set it on the nightstand.
+You set down your bags to unpack.  You take your gun out of your suitcase and set it on the nightstand.
 <haroldgun->true>
 !gun,take,set,nightstand,ok,continue->beg-harold-room
 
 #harold-room-ua
-It looks like you already unpacked by the presence of your gun on the nightstand.
+You have unpacked already.
 !ok,continue,gun,set->beg-harold-room
 
 #harold-room-b
@@ -60,20 +60,19 @@ else->harold-room-b1
 
 #harold-room-b1
 <haroldbible->true>
-You just randomly open and close the drawers in the room.  In the nightstand drawer, you see a bible.  Nothing else to see here.
-!ok,back,continue->beg-harold-room
+You randomly open and close the drawers in the room.  In the nightstand drawer, there is a bible.  The rest of them are empty
 
 #harold-room-b2
 haroldgun=true->harold-room-by
 else->harold-room-bn
 
 #harold-room-by
-You open the bible drawer again.  Looking at the bible with the gun on the nightstand above it reminds you that you have an important decision to make.
+You open the nightstand drawer again,  looking at the bible with the gun on the nightstand above it reminds you that you have an important decision to make.
 <harolddec->true>
 !ok,continue,back->beg-harold-room
 
 #harold-room-bn
-You open the bible drawer again.  Still looks like there isn't much else to do here.
+You open the drawer with the bible in it again, there is still nothing to do here.
 !ok,continue,back->beg-harold-room
 
 #harold-room-s
@@ -81,37 +80,37 @@ harolddec=true->harold-room-sd
 else->harold-room-sn
 
 #harold-room-sn
-You aren't quite ready to take a shower yet. You're forgetting something.
+You aren't ready to take a shower yet, you're forgetting something.
 !ok,continue,back->beg-harold-room
 
 #harold-room-sd
-You decide to get in the shower.
+You get in the shower.
 !shower,ok,continue,go,get in->beg-7
 
 #beg-7
-And take your gun.
+And bring your gun with you.
 !take,gun->beg-8
 
 #beg-8
-And you turn on the shower.
-!turn on,shower,on->beg-9
+You turn on the shower. The hot water pours onto your body. At first is it too hot to bare but, your body adjusts quickly. The pain re
+minds your that there is a decision to be made
 
 #beg-9
-The cold water begins to fill the tub.  You lift the gun to your head.
+The hot water begins to fill the tub.  You lift the gun to your head. The cold of the barrel is noticable, compared to the hot water. Steam is beginning to fill the shower. You feel the cold of the barrel against your temple. The gun against your temple
 !lift,gun,head,ok,continue->beg-10
 
 #beg-10
-No, you would of heard that, his body found with the top half of his head blown off.  The maid screaming when she comes in just minutes minute after the bang. Keep driving.
+No, you would of heard that. You would of heard that his body was found with the top half of his head blown off. Hot water still running over it. The maid screaming when she comes in just minutes after the bang. Keep driving.
 !continue,keep driving,drive,driving->beg-11
 
 #beg-11
-Oakland it coming up on the side of the highway.  Harold must have went this way.  He must have.
+The thing is, he didn't ever seem to exist. You spent your entire childhood with him. He lived just acrossed the street. He had some friends in Oakland.  I wonder if they still live here.  Harold's parents got divorced when he was 17. Him and his dad moved to Oakland.  
 !enter,enter town,town,go to town,stop->beg-12
 
 #beg-12
-The thing is, he didn't ever seem to exist. You spent your entire childhood with him. He lived just acrossed the street. He had some friends in Oakland.  I wonder if they still live here.  Harold's parents got divorced when he was 17. Him and his dad moved to Oakland.  Does anyone here remember Harold?  
+Oakland is coming up on the side of the highway. It would be good to stop here, in case someone here remebers him. No one remembers him in our home town. I've asked my parents, his friends, and our teachers. They all just look at me like I'm crazy but, I know Harold exists.
 
-You park at a sketchy sub shop. It looks pretty dirty and empty.  It is your first time to Oakland so your have no idea where to start. It might be good to check with the "police", they might have records of Harold. You could also go into the abandoned "shop".  You could also go door to "door" knocking but that may seem a bit conspcuous. 
+You park at a sketchy sub shop. The sun is sinking in the horizon reducing the buildings infront of your into shillotes. The orange and the reds of the sunset paint the sky.  This is your first time to Oakland so you have no idea where to start. It might be good to check with the "police", they could have records of Harold. You could also go into the abandoned "shop".  You could also go door to "door" knocking but that may seem a bit supious. 
 !police->oakland-police
 !door,knocking,door to door->oakland-d1
 !shop,subway,store,enter->oakland-s1
