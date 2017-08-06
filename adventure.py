@@ -1,25 +1,105 @@
 from time import sleep
 
-
-globalProps = dict()
 rooms = []
 currRoom = False
-parent = False
 roomsInitCount = 0;
+varList = dict()
+
+
+
+
+class ConditionTest:
+	def __init__(self,parseString):
+		self.var1 = False
+		self.var1isConstant = False
+		self.comparison = False
+		self.var2 = False
+		self.var2isConstant = False
+
+		if(parseString.startswith('?')):
+			parseString = parseString[1:]
+		v1 = ''
+		v2 = ''
+		compString = ''
+		part = 0
+		compCharList = ['!','<','>','=']
+		for char in parseString:
+			if part is 0:
+				if char in compCharList:
+					part = 1
+				else:
+					v1 += char
+			if part is 1:
+				if char not in compCharList:
+					part = 2
+				else:
+					compString += char
+			if part is 2:
+				v2 += char
+		try:
+			self.var1 = int(v1)
+			self.var1isConstant = True
+		except ValueError:
+			self.var1 = v1
+			self.var1isConstant = False
+		try:
+			self.var2 = int(v2)
+			self.var2isConstant = True
+		except ValueError:
+			self.var2 = v2
+			self.var2isConstant = False
+		self.comparison = compString
+
+	def success(self):
+		v1 = self.var1
+		if self.var1isConstant is False:
+			v1 = int (varList[self.var1])
+		v2 = self.var2
+		if self.var2isConstant is False:
+			v2 = int (varList[self.var2])
+		ret = False
+		#CURRENTLY greater/lessthan combined with equals
+		if self.comparison is '<=':
+			ret = (v1 < v2 or v1 is v2)
+		elif self.comparison is '>=':
+			ret = (v1 > v2 or v1 is v2)
+		elif self.comparison is '=<':
+			ret = (v1 < v2 or v1 is v2)
+		elif self.comparison is '=>':
+			ret = (v1 > v2 or v1 is v2)
+		elif self.comparison is '=':
+			ret = (v1 is v2)
+		elif self.comparison is '!=':
+			ret = (v1 != v2)
+		elif self.comparison is '<':
+			ret = (v1 < v2)
+		elif self.comparison is '>':
+			ret = (v1 > v2)
+		
+
+		return ret
 
 class Room:
 	def __init__(self,lbl='default_label'):
 		self.label = lbl
 		self.paragraph = ''
 		self.choices = dict()
-		self.propset = []
-		self.conditional = False
-		self.contElse = False
+
 		self.isStory = False
 		self.isCoords = False
 		self.isQInfo = False
+
+		self.parent = False
+		self.children = []
+		self.tests = []
 	def exe(self):
 		globalProps.update(self.propset)
+
+#varList.update({'snelly':'5'})
+#t = ConditionTest('snelly>2')
+#print(t.success())
+#exit()
+
 
 #PARSING
 
@@ -27,18 +107,18 @@ with open("TheRoad.adv") as f:
 	for line in f:
 		line = line.replace('\n','').trim()
 		#ROOM HEADER
-		if line.startswith("#"): 
+		if line.startswith("@"): 
 			if currRoom is not False:
 				rooms.append(currRoom)
 				roomsInitCount += 1
 			story = False
-			line = line[1:]
+			line = line[1:].strip()
 			if line[0] is 's' or line[0] is 'S':
 				if len(line) is 1 or line[1] is ' ' or line[1] is '\n':
 					story = True
 					line = line[1:]
-			rmName = line.strip();
-			if rmName.isspace or len(rmName) == 0:
+			rmName = line.strip()
+			if rmName.isspace() or len(rmName) == 0:
 				if story is True:
 					rmName = "StoryRoom%d"%roomsInitCount
 			currRoom = Room(rmName)
@@ -47,32 +127,24 @@ with open("TheRoad.adv") as f:
 		#EMPTY SPACE
 		elif line.isspace():
 			continue
-		elif line.startswith("->")
+		#QInfo automatically moves player to next room after printing paragraph
+		elif line.startswith("->"):
 			line = line[2:]
 			currRoom.isQInfo = line.trim()
 		#PROPERTY MUTATION
-		elif line.startswith('^'):
-			currRoom.propset.append(line[1:].trim())
+		elif line.startswith('$'):
+			currRoom.varList.update({line[1:].trim() : 1})
 		#PROPERTY TEST
 		elif line.startswith('?'):
 			line = line[1:].trim()
-			if line.startswith("<"):
-				line = line[1:].trim()
-				intLimit = int(line)
-				if ##TODO PROPER PROP TESTS
-			currRoom.conditional = True
-			cont = line.split("=")
-			reslt = cont[1].split("->")
-			currRoom.propset.update({
-				cont[0]:{
-				reslt[0] : reslt[1]
-				}
-				})
-		#PROPERTY ELSE TEST
-		elif '->' in line and currRoom.conditional is True:
-			spl = line.split("->")
-			if spl[0].lower() == "else".lower():
-				currRoom.contElse = spl[1]
+			nTest = Test(line)
+			nRm = Room(currRoom.lbl + '-child-' + len(currRoom.children))
+			nRm.parent = currRoom
+			currRoom.children.append(nRm)
+			currRoom.tests.append(nTest)
+			currRoom = nRm
+		elif line.startswith('^')
+			currRoom = currRoom.parent
 		#USER RESPONSE DEFINITION
 		elif line.startswith("!"):
 			sp = line[1:].split("->")
