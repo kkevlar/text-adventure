@@ -50,14 +50,21 @@ class ConditionTest:
 			self.var2isConstant = False
 		self.comparison = compString
 
-	def success(self):
-		v1 = self.var1
-		if self.var1isConstant is False:
-			v1 = int (varList[self.var1])
-		v2 = self.var2
-		if self.var2isConstant is False:
-			v2 = int (varList[self.var2])
-		ret = False
+	def success(self,rm):
+		try:
+			v1 = self.var1
+			if v1 == '':
+				v1 = rm.visits
+			elif self.var1isConstant is False:
+				v1 = int (varList[self.var1])
+			v2 = self.var2
+			if v2 == '':
+				v2 = rm.visits
+			elif self.var2isConstant is False:
+				v2 = int (varList[self.var2])
+			ret = False
+		except Exception as e:
+			return False
 		#CURRENTLY greater/lessthan combined with equals
 		if self.comparison is '<=':
 			ret = (v1 < v2 or v1 is v2)
@@ -80,7 +87,7 @@ class ConditionTest:
 		return ret
 
 class Room:
-	def __init__(self,lbl='default_label'):
+	def __init__(self,line='',lbl='default_label'):
 		self.label = lbl
 		self.paragraph = ''
 		self.choices = dict()
@@ -92,8 +99,84 @@ class Room:
 		self.parent = False
 		self.children = []
 		self.tests = []
+
+		self.proplist = dict()
+
+		self.visits = 0
+		
+		self.w = -1
+		self.x = 0
+		self.y = 0
+		self.z = 0
+
+		if not line.isspace():
+			if line.startswith('-s') or  line.startswith('-S'):
+				line = line[2:].strip()
+				self.isStory = True	
+				if len(line) is 0 or line[1] is ' ' or line[1] is '\n' or line.isspace():
+					self.label = "StoryRoom%d"%roomsInitCount	
+				else:
+					self.label = line.strip().lower()				
+			elif  line.startswith('-c') or  line.startswith('-C'):
+				self.isCoords = True
+				optCount = 0
+				line = line[2:].strip().lower()
+				for char in line:
+					action = '#'
+					chs = []
+					if char is 'n':
+						action += '0,0,0,1'
+						chs.append('n')
+						chs.append('north')
+					elif char is 's':
+						action += '0,0,0,-1'
+						chs.append('s')
+						chs.append('south')
+					elif char is 'e':
+						action += '0,1,0,0'
+						chs.append('e')
+						chs.append('east')
+					elif char is 'w':
+						action += '0,-1,0,0'
+						chs.append('w')
+						chs.append('west')
+					elif char is 'u':
+						action += '0,0,1,0'
+						chs.append('u')
+						chs.append('up')
+					elif char is 'd':
+						action += '0,0,-1,0'
+						chs.append('d')
+						chs.append('down')
+					elif char is 'f':
+						action += '1,0,0,0'
+						chs.append('f')
+						chs.append('forward')
+					elif char is 'b':
+						action += '-1,0,0,0'
+						chs.append('b')
+						chs.append('back')
+					else:
+						break
+					if action is not '#' and len(chs) > 0:
+						for choice in chs:
+							self.choices.update({choice:action})
+						optCount += 1
+				line = line[optCount:]
+				splits = line.split('@')
+				self.label = splits[0]
+				preCommaSplice = splits[1].replace('(','').replace(')','').replace('[','').replace(']','')
+				coordStrings = preCommaSplice.split(',')
+				self.w = int(coordStrings[0])
+				self.x = int(coordStrings[1])
+				self.y = int(coordStrings[2])
+				self.z = int(coordStrings[3])
+			else:
+				self.label = line.strip()
+		
 	def exe(self):
-		globalProps.update(self.propset)
+		varList.update(self.proplist)
+		self.visits += 1
 
 #varList.update({'snelly':'5'})
 #t = ConditionTest('snelly>2')
@@ -103,9 +186,9 @@ class Room:
 
 #PARSING
 
-with open("TheRoad.adv") as f:
+with open("test.adv") as f:
 	for line in f:
-		line = line.replace('\n','').trim()
+		line = line.replace('\n','').strip()
 		#ROOM HEADER
 		if line.startswith("@"): 
 			if currRoom is not False:
@@ -113,37 +196,28 @@ with open("TheRoad.adv") as f:
 				roomsInitCount += 1
 			story = False
 			line = line[1:].strip()
-			if line[0] is 's' or line[0] is 'S':
-				if len(line) is 1 or line[1] is ' ' or line[1] is '\n':
-					story = True
-					line = line[1:]
-			rmName = line.strip()
-			if rmName.isspace() or len(rmName) == 0:
-				if story is True:
-					rmName = "StoryRoom%d"%roomsInitCount
-			currRoom = Room(rmName)
-			if story is True:
-				currRoom.isStory = True
+			currRoom = Room(line=line)
 		#EMPTY SPACE
 		elif line.isspace():
 			continue
 		#QInfo automatically moves player to next room after printing paragraph
 		elif line.startswith("->"):
 			line = line[2:]
-			currRoom.isQInfo = line.trim()
+			currRoom.isQInfo = line.strip()
 		#PROPERTY MUTATION
 		elif line.startswith('$'):
-			currRoom.varList.update({line[1:].trim() : 1})
+			currRoom.proplist.update({line[1:].strip() : 1})
 		#PROPERTY TEST
 		elif line.startswith('?'):
-			line = line[1:].trim()
-			nTest = Test(line)
-			nRm = Room(currRoom.lbl + '-child-' + len(currRoom.children))
+			line = line[1:].strip()
+			nTest = ConditionTest(line)
+			nRm = Room(lbl="%s-child-%d" % (currRoom.label, len(currRoom.children)))
 			nRm.parent = currRoom
 			currRoom.children.append(nRm)
+			#print("somebody got a child %d" % len(currRoom.children))
 			currRoom.tests.append(nTest)
 			currRoom = nRm
-		elif line.startswith('^')
+		elif line.startswith('^'):
 			currRoom = currRoom.parent
 		#USER RESPONSE DEFINITION
 		elif line.startswith("!"):
@@ -159,7 +233,7 @@ with open("TheRoad.adv") as f:
 rooms.append(currRoom)
 
 for room in rooms:
-	print("no:%d lbl:%s"%(rooms.index(room),room.label))
+	print("no:%d lbl:%s story:%s qinfo:%s coords:%s"%(rooms.index(room),room.label, room.isStory, room.isQInfo,room.isCoords))
 
 
 #PLAYING
@@ -173,32 +247,63 @@ def findRoom(rmId):
 	global currRoom
 	global glbCont
 	roomFound = False
-	for rmm in rooms:
-		if rmm.label.lower().strip() == rmId.lower().strip():
-			currRoom = rmm
+	print(rmId)
+	if(rmId.startswith("@") or rmId.startswith("#")):
+		coordStrings = rmId[1:].replace('(','').replace(')','').replace('[','').replace(']','').split(",")
+		fw = int(coordStrings[0])
+		fx = int(coordStrings[1])
+		fy = int(coordStrings[2])
+		fz = int(coordStrings[3])
+		if(rmId[0] == '#'):
+			fw += currRoom.w;
+			fx += currRoom.x;
+			fy += currRoom.y;
+			fz += currRoom.z;
+		for room in rooms:
+			if not room.isCoords:
+				continue
+			if(fw != room.w):
+				continue;
+			if(fx != room.x):
+				continue;
+			if(fy != room.y):
+				continue;
+			if(fz != room.z):
+				continue;
+			currRoom = room
 			glbCont = True
 			roomFound = True
+	else:
+		for rmm in rooms:
+			if rmm.label.lower().strip() == rmId.lower().strip():
+				currRoom = rmm
+				glbCont = True
+				roomFound = True
 	if roomFound is False:
 		print("FAILED TO FIND ROOM %s" % rmId)
 
 while True:
-	if currRoom.conditional is True:
-		for gk in globalProps:
-			for ck in currRoom.propset:
-				if ck in currRoom.propset:
-					for ckk in currRoom.propset[ck]:
-						if gk.lower() == ck.lower():
-							if globalProps[gk].lower() == ckk.lower():
-								rmId = (currRoom.propset[ck])
-								rmId = rmId[ckk]
-								findRoom(rmId)						
-		if(glbCont is False and currRoom.contElse is not False):
-			rmId = currRoom.contElse
-			findRoom(rmId)
+	glbCont = False
+	currRoom.exe();
+	print ("coords: %d,%d,%d,%d" % (currRoom.w,currRoom.x,currRoom.y,currRoom.z))
+	#print(len(currRoom.tests))
+	#print(len(currRoom.children))
+	#print("cLen=%d" % len(currRoom.children))
+	#print("ROOM: " + currRoom.label)
+	if len(currRoom.tests) > 0:
+		for test in currRoom.tests:
+			if test.success(currRoom):
+				num = currRoom.tests.index(test)
+				currRoom = currRoom.children[num]
+				glbCont = True
+				break
+		if glbCont is False:
+			currRoom = currRoom.children[-1]
+
 	if glbCont is True:
 		glbCont = False
 		continue
-	currRoom.exe();
+	
 	for i in range(0,len(currRoom.paragraph)):
 		slptime=0.004 #0.04
 		char=currRoom.paragraph[i]
@@ -211,8 +316,8 @@ while True:
 		print(currRoom.paragraph[i],end="",flush=True)
 		sleep(slptime)
 	#print("")
-	if room.isQInfo is not False:
-		rmId = room.isQInfo
+	if currRoom.isQInfo is not False:
+		rmId = currRoom.isQInfo
 		findRoom(rmId)
 		continue;
 	choice = input("  >").replace('\n','')
@@ -227,6 +332,7 @@ while True:
 		for chx in currRoom.choices:
 			print(" \"%s\" "%chx,end="",flush=True)
 		print("\n")
+		currRoom.visits -= 1
 		continue;
 	rmId = currRoom.choices[choice]
 	findRoom(rmId)

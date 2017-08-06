@@ -1,0 +1,15 @@
+@-cnsew start @(0,0,0,0)
+Center Room
+The cave spreads out in all four cardinal directions.
+
+@-cnsew nrm @(0,0,0,1)
+North Room
+
+@-cnsew srm @(0,0,0,-1)
+South Room
+
+@-cnsew erm @(0,1,0,0)
+East Room
+
+@-cnsew wrm @(0,-1,0,0)
+West Room
