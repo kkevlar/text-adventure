@@ -1,0 +1,14 @@
+@-Cud start @(0,0,0,0)
+A Cold Cave
+You wake up in a frozen cave.  You don't remember very much.  Either head up to the surface or downwards to explore it further.
+
+@-Cd tundra @(0,0,1,0)
+Blizzarding Tundra
+You find yourself braving the freezing tundra.
+?=2
+It's not really any different than the last time you were here.
+^
+?>2
+It's not really any different than the last few times you were here.
+^
+

@@ -87,7 +87,7 @@ class ConditionTest:
 		return ret
 
 class Room:
-	def __init__(self,line='',lbl='default_label'):
+	def __init__(self,line='',lbl='default_label', par=False):
 		self.label = lbl
 		self.paragraph = ''
 		self.choices = dict()
@@ -96,7 +96,7 @@ class Room:
 		self.isCoords = False
 		self.isQInfo = False
 
-		self.parent = False
+		self.parent = par
 		self.children = []
 		self.tests = []
 
@@ -108,6 +108,13 @@ class Room:
 		self.x = 0
 		self.y = 0
 		self.z = 0
+
+		if par != False:
+			self.w = par.w
+			self.x = par.x
+			self.y = par.y
+			self.z = par.z
+
 
 		if not line.isspace():
 			if line.startswith('-s') or  line.startswith('-S'):
@@ -175,6 +182,11 @@ class Room:
 				self.label = line.strip()
 		
 	def exe(self):
+		if self.parent != False:
+			self.w = self.parent.w
+			self.x = self.parent.x
+			self.y = self.parent.y
+			self.z = self.parent.z
 		varList.update(self.proplist)
 		self.visits += 1
 
@@ -186,7 +198,7 @@ class Room:
 
 #PARSING
 
-with open("test.adv") as f:
+with open("new-cave.adv") as f:
 	for line in f:
 		line = line.replace('\n','').strip()
 		#ROOM HEADER
@@ -298,7 +310,8 @@ while True:
 				glbCont = True
 				break
 		if glbCont is False:
-			currRoom = currRoom.children[-1]
+			#currRoom = currRoom.children[-1]
+			pass
 
 	if glbCont is True:
 		glbCont = False
@@ -315,6 +328,21 @@ while True:
 			slptime=slptime*0
 		print(currRoom.paragraph[i],end="",flush=True)
 		sleep(slptime)
+	temp = currRoom
+	while currRoom.parent is not False:		
+		for i in range(0,len(currRoom.paragraph)):
+			slptime=0.004 #0.04
+			char=currRoom.paragraph[i]
+			if char is '.':
+				slptime=slptime*10
+			if char is '\n':
+				slptime=slptime*2
+			if i is len(currRoom.paragraph) -1:
+				slptime=slptime*0
+			print(currRoom.paragraph[i],end="",flush=True)
+			sleep(slptime)
+		currRoom = currRoom.parent
+	currRoom = temp
 	#print("")
 	if currRoom.isQInfo is not False:
 		rmId = currRoom.isQInfo
@@ -328,11 +356,22 @@ while True:
 		currRoom = rooms[nIndex+1]
 		continue;
 	if not choice in currRoom.choices:
-		print("Not an option. Choices are: ",end="",flush=True)
-		for chx in currRoom.choices:
-			print(" \"%s\" "%chx,end="",flush=True)
-		print("\n")
-		currRoom.visits -= 1
+		temp = currRoom
+		found = False
+		while currRoom.parent is not False:		
+			if choice in currRoom.choices:
+				rmId = currRoom.choices[choice]
+				findRoom(rmId)
+				found = True
+				break
+			currRoom = currRoom.parent
+		if found is False:
+			currRoom = temp
+			print("Not an option. Choices are: ",end="",flush=True)
+			for chx in currRoom.choices:
+				print(" \"%s\" "%chx,end="",flush=True)
+			print("\n")
+			currRoom.visits -= 1
 		continue;
 	rmId = currRoom.choices[choice]
 	findRoom(rmId)
