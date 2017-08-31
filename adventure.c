@@ -7,10 +7,10 @@ enum _ct_type
 	EQUAL, 
 	GREATER,
 	LESS,
-	GREATERE,
-	LESSE,
+	EGAREATER,
+	ELESS,
 	NOT
-}
+};
 typedef enum _ct_type ct_type;
 
 struct _room_t
@@ -35,10 +35,43 @@ struct _room_t
 typedef struct _room_t room_t;
 
 int propVals[1024];
-room_t rooms[2000];
+// room_t rooms[2000];
+char text[10000];
+int ti = 0;
+int chxi = 0;
 
 int main()
 {
+	room_t crm;
+	FILE* f = fopen("TheRoad.adv","r");
+	crm.choices[0] = &text[1];
+	while(1)
+	{
+		char c = getc(f);
+		if(c == EOF)
+		{
+			text[++ti] = '\0';
+			break;
+		}
+		else if(c == '\n')
+		{
+			text[++ti] = '\0';
+			if(chxi+1 < 16)
+			{
+				crm.choices[++chxi] = &text[ti+1];
+			}
+		}
+		else 
+			text[++ti] = c;
+		printf("%c",c);
+	}
+	printf("\n\n\n Now the real fun starts\n");
+	for(int i = 0; i < chxi+1; i++)
+	{
+		printf("String %d is \"%s\"\n",i,crm.choices[i]);
+	}
+	printf("%d %d\n",ti,chxi);
+/*	
 	FILE* f = fopen("TheRoad.adv","r");
 	while(1)
 	{
@@ -52,4 +85,5 @@ int main()
 	{
 		;
 	}
+*/
 }
