@@ -35,35 +35,52 @@ struct _room_t
 typedef struct _room_t room_t;
 
 int propVals[1024];
-// room_t rooms[2000];
-char text[10000];
+room_t rooms[2000];
+char text[1000000];
+
 int ti = 0;
-int chxi = 0;
+int roomIndex = 0;
+int inlineIndex = 0;
 
 int main()
 {
-	room_t crm;
 	FILE* f = fopen("TheRoad.adv","r");
-	crm.choices[0] = &text[1];
 	while(1)
 	{
 		char c = getc(f);
 		if(c == EOF)
 		{
-			text[++ti] = '\0';
+			text[ti] = '\0';
+			ti++;
 			break;
+		}
+		else if (inlineIndex == 0 && 
+			(c == '\n') ||
+			(c == ' ') ||
+			(c == 9) )
+		{
+			//pass
 		}
 		else if(c == '\n')
 		{
-			text[++ti] = '\0';
-			if(chxi+1 < 16)
-			{
-				crm.choices[++chxi] = &text[ti+1];
-			}
+			text[ti] = '\0';
+			ti++;
+			inlineIndex = 0;
 		}
-		else 
-			text[++ti] = c;
-		printf("%c",c);
+		else if (inlineIndex == 0 && c == '@')
+		{
+			rooms[roomIndex] = &(text[ti]);
+		}
+		else if (inlineIndex == 0 && c == '!')
+		{
+			//choice here
+		}
+		else
+		{
+			inlineIndex++;
+			text[ti] = c;
+			ti++;
+		}
 	}
 	printf("\n\n\n Now the real fun starts\n");
 	for(int i = 0; i < chxi+1; i++)
